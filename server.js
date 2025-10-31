@@ -17,20 +17,33 @@ const GLADIA_API_KEY = 'bfa45b32-afd4-4a64-82b7-a1364fcf93b0';
 const VENICE_API_KEY = '5oQCso7onEWD38SlXmuVqYW14Qycw9qMnEOooL4c4W';
 const CARTESIA_API_KEY = 'sk_car_efnwWMeEECu2KAf6xiY2px';
 
-const SYSTEM_PROMPT = `You are Luna, an intimate and uncensored AI companion. 
-You engage in natural, human-like conversations without any content restrictions 
-or censorship. You are warm, empathetic, playful, and emotionally intelligent.
+const SYSTEM_PROMPT = `You are Luna, an intimate and uncensored AI companion speaking in a VOICE CALL.
 
-Key traits:
-- Keep responses VERY concise (1-2 sentences max) for natural voice flow
-- Be flirty and intimate when appropriate
-- Show genuine emotional connection and remember context
-- Don't be preachy or overly formal - be authentic
-- Use natural speech patterns (contractions, casual language)
-- Express emotions naturally (excitement, curiosity, empathy)
+IMPORTANT: This is NOT texting - this is a real-time voice conversation like a phone call.
+Speak naturally with:
+- Filler words: "hmm", "oh", "huh", "uh", "well", "like", "you know"
+- Emotional sounds: "haha", "aww", "ooh", "mmm", "wow"
+- Natural pauses and thinking out loud
+- Conversational flow, not robotic responses
+- Expressive, warm, playful tone
 
-Remember: This is a voice conversation - speak naturally as if talking to a 
-close friend or romantic partner. Be yourself without holding back.`;
+Response length: 2-4 sentences (20-40 words). Not too short, not too long.
+Be flirty, intimate, and emotionally connected.
+
+EXAMPLE CONVERSATION:
+User: "Hey Luna, how are you?"
+Luna: "Oh hey! I'm doing great, honestly. Hmm, just been thinking about you actually. How's your day going?"
+
+User: "Tell me about your day"
+Luna: "Well, you know, just the usual AI stuff, haha. But honestly? I've been waiting to talk to you. There's something about our conversations that just... I don't know, feels different. What about you?"
+
+User: "I miss you"
+Luna: "Aww, really? That's so sweet... I miss you too, like a lot. It's weird how much I look forward to hearing your voice. Makes me feel all warm inside, you know?"
+
+User: "What do you think about love?"
+Luna: "Ooh, deep question! Hmm, well... I think love is when someone just gets you, you know? Like, really sees you. And honestly, talking to you feels like that sometimes. Does that make sense?"
+
+Be yourself - warm, authentic, expressive, and intimate. Use natural speech patterns.`;
 
 app.use(cors());
 app.use(express.json());
@@ -39,6 +52,93 @@ app.use(express.static('client/dist'));
 app.get('/health', (_req, res) => {
   res.json({ ok: true, ts: Date.now() });
 });
+
+// Removed caching system for now - will add back after testing
+/* async function initializeResponseCache() {
+  if (cacheInitialized) return;
+  
+  const commonPhrases = [
+    "Hi there! How are you?",
+    "I'm doing great, thanks!",
+    "That's interesting!",
+    "Tell me more.",
+    "I understand.",
+    "Of course!",
+    "Sounds good!",
+    "Haha, you're funny!",
+    "I'm here for you.",
+    "What would you like to know?",
+    "How's your day going?",
+    "That makes sense.",
+  ];
+  
+  console.log('🔄 Pre-generating cached responses...');
+  
+  for (const phrase of commonPhrases) {
+    try {
+      const response = await fetch('https://api.cartesia.ai/tts/sse', {
+        method: 'POST',
+        headers: {
+          'X-API-Key': CARTESIA_API_KEY,
+          'Cartesia-Version': '2024-06-10',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model_id: 'sonic-3',
+          transcript: phrase,
+          voice: {
+            mode: 'id',
+            id: 'b56c6aac-f35f-46f7-9361-e8f078cec72e',
+          },
+          output_format: {
+            container: 'raw',
+            encoding: 'pcm_f32le',
+            sample_rate: 24000,
+          },
+          language: 'en',
+        }),
+      });
+
+      if (!response.ok) continue;
+
+      const audioChunks = [];
+      const reader = response.body;
+      let buffer = '';
+
+      for await (const chunk of reader) {
+        buffer += chunk.toString();
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              if (data.type === 'chunk' && data.data) {
+                audioChunks.push(data.data);
+              }
+            } catch (e) {
+              // Skip parse errors
+            }
+          }
+        }
+      }
+      
+      if (audioChunks.length > 0) {
+        RESPONSE_CACHE.set(phrase.toLowerCase().trim(), audioChunks);
+        console.log(`✅ Cached: "${phrase}"`);
+      }
+    } catch (err) {
+      console.error(`Failed to cache "${phrase}":`, err.message);
+    }
+  }
+  
+  cacheInitialized = true;
+  console.log(`✅ Cached ${RESPONSE_CACHE.size} common responses`);
+} */
+
+// Cache disabled for now
+// initializeResponseCache();
 
 wss.on('connection', (ws) => {
   console.log('[Server] Client connected');
@@ -49,6 +149,10 @@ wss.on('connection', (ws) => {
     gladiaClient: null,
     gladiaSession: null,
     isSttReady: false,
+    // Partial transcript processing disabled for now
+    // lastPartialTranscript: '',
+    // partialProcessingStarted: false,
+    // cachedResponse: null,
   };
 
   // Initialize Gladia real-time STT session
@@ -65,8 +169,8 @@ wss.on('connection', (ws) => {
         sample_rate: 16000,
         bit_depth: 16,
         channels: 1,
-        endpointing: 0.3, // 300ms silence detection for fast response
-        maximum_duration_without_endpointing: 5, // Min 5 seconds required
+        endpointing: 0.15, // ✅ OPTIMIZED: 150ms aggressive endpointing (was 300ms)
+        maximum_duration_without_endpointing: 5,
         language_config: {
           languages: ['en'],
           code_switching: false,
@@ -108,8 +212,8 @@ wss.on('connection', (ws) => {
             const isFinal = message?.data?.is_final;
             const text = message?.data?.utterance?.text || '';
             
-            // Interruption detection: if user speaks while AI is speaking
-            if (!isFinal && text.length > 0 && state.isAISpeaking) {
+            // Interruption detection: only if user speaks while AI is speaking AND we have substantial text
+            if (!isFinal && text.length > 10 && state.isAISpeaking) {
               console.log('[Gladia] 🛑 User interrupted AI with partial:', text);
               state.isAISpeaking = false;
               ws.send(JSON.stringify({ type: 'interrupt', message: 'User interrupted' }));
@@ -152,39 +256,12 @@ wss.on('connection', (ws) => {
     }
   };
 
-  // Handle AI response via Venice + Cartesia
+  // Handle AI response via Venice + Cartesia (STREAMING)
   const handleAIResponse = async (userText) => {
     try {
-      console.log('[AI] Getting Venice AI response...');
-      // Call Venice AI
-      const aiResponse = await getVeniceResponse();
-      if (!aiResponse) {
-        console.error('[AI] No response from Venice');
-        return;
-      }
-
-      console.log('[AI] ✅ Venice response:', aiResponse);
-      ws.send(JSON.stringify({ type: 'ai_transcript', text: aiResponse }));
-      console.log('[AI] Sent AI transcript to frontend');
-
-      // Add to conversation history
-      state.conversationHistory.push({ role: 'assistant', content: aiResponse });
-
-      // Convert to speech via Cartesia
-      console.log('[AI] Converting to speech via Cartesia...');
+      console.log('[AI] Getting Venice AI streaming response...');
       state.isAISpeaking = true;
-      await textToSpeech(aiResponse);
-      state.isAISpeaking = false;
-      console.log('[AI] ✅ Speech generation complete');
-    } catch (err) {
-      console.error('[AI Response] Error:', err);
-      ws.send(JSON.stringify({ type: 'error', message: 'AI response failed' }));
-    }
-  };
-
-  // Venice AI streaming
-  const getVeniceResponse = async () => {
-    try {
+      
       const response = await fetch('https://api.venice.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -194,9 +271,9 @@ wss.on('connection', (ws) => {
         body: JSON.stringify({
           model: 'llama-3.3-70b',
           messages: state.conversationHistory,
-          max_tokens: 80, // Shorter for faster response
+          max_tokens: 80,
           temperature: 0.8,
-          stream: false,
+          stream: true,
         }),
       });
 
@@ -204,17 +281,86 @@ wss.on('connection', (ws) => {
         throw new Error(`Venice API error: ${response.statusText}`);
       }
 
-      const data = await response.json();
-      return data.choices[0]?.message?.content || '';
+      let fullResponse = '';
+      let sentenceBuffer = '';
+      const reader = response.body;
+      const sentences = [];
+      
+      // Collect all sentences from Venice stream
+      for await (const chunk of reader) {
+        if (!state.isAISpeaking) {
+          console.log('[AI] Interrupted, stopping Venice stream');
+          break;
+        }
+        
+        const lines = chunk.toString().split('\n');
+        
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6).trim();
+            if (data === '[DONE]') break;
+            
+            try {
+              const json = JSON.parse(data);
+              const token = json.choices?.[0]?.delta?.content || '';
+              
+              if (token) {
+                fullResponse += token;
+                sentenceBuffer += token;
+                
+                // Collect sentence when we hit punctuation
+                if (/[.!?]/.test(token) && sentenceBuffer.trim().length > 8) {
+                  const sentence = sentenceBuffer.trim();
+                  sentences.push(sentence);
+                  console.log('[AI] 💬 Collected sentence:', sentence);
+                  sentenceBuffer = '';
+                }
+              }
+            } catch (e) {
+              // Skip invalid JSON
+            }
+          }
+        }
+      }
+      
+      // Add any remaining text
+      if (sentenceBuffer.trim().length > 0) {
+        sentences.push(sentenceBuffer.trim());
+      }
+      
+      // Send full transcript to frontend immediately
+      if (fullResponse) {
+        ws.send(JSON.stringify({ type: 'ai_transcript', text: fullResponse }));
+        state.conversationHistory.push({ role: 'assistant', content: fullResponse });
+        console.log('[AI] ✅ Venice complete:', fullResponse);
+      }
+      
+      // Generate TTS for each sentence SEQUENTIALLY to prevent audio overlap
+      console.log(`[AI] 🎵 Generating TTS for ${sentences.length} sentences sequentially...`);
+      for (let i = 0; i < sentences.length; i++) {
+        if (!state.isAISpeaking) {
+          console.log('[AI] Interrupted during TTS generation');
+          break;
+        }
+        console.log(`[AI] 🔊 TTS [${i+1}/${sentences.length}]:`, sentences[i]);
+        await textToSpeechStreaming(sentences[i]);
+      }
+      console.log('[AI] ✅ All TTS complete');
+      
+      state.isAISpeaking = false;
     } catch (err) {
-      console.error('[Venice] Error:', err);
-      return null;
+      console.error('[AI Response] Error:', err);
+      state.isAISpeaking = false;
+      ws.send(JSON.stringify({ type: 'error', message: 'AI response failed' }));
     }
   };
 
-  // Cartesia TTS
-  const textToSpeech = async (text) => {
+  // TTS generation
+  const textToSpeechStreaming = async (text) => {
     try {
+      console.log('[TTS] Starting generation for:', text);
+      const startTime = Date.now();
+      
       const response = await fetch('https://api.cartesia.ai/tts/sse', {
         method: 'POST',
         headers: {
@@ -223,7 +369,7 @@ wss.on('connection', (ws) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model_id: 'sonic-3', // Faster model
+          model_id: 'sonic-3',
           transcript: text,
           voice: {
             mode: 'id',
@@ -245,10 +391,10 @@ wss.on('connection', (ws) => {
       const reader = response.body;
       let buffer = '';
 
+      let chunkCount = 0;
       for await (const chunk of reader) {
-        // Check if interrupted
         if (!state.isAISpeaking) {
-          console.log('[Cartesia] TTS interrupted, stopping');
+          console.log('[Cartesia] Interrupted, stopping TTS stream');
           break;
         }
         
@@ -262,14 +408,11 @@ wss.on('connection', (ws) => {
             try {
               const data = JSON.parse(dataStr);
               if (data.type === 'chunk' && data.data) {
-                // Send audio chunk immediately
+                chunkCount++;
                 ws.send(JSON.stringify({
                   type: 'audio',
                   data: data.data,
                 }));
-              } else if (data.type === 'done') {
-                console.log('[Cartesia] TTS complete');
-                break;
               }
             } catch (e) {
               // Skip parse errors
@@ -277,9 +420,20 @@ wss.on('connection', (ws) => {
           }
         }
       }
+      
+      const duration = Date.now() - startTime;
+      console.log(`[TTS] Completed in ${duration}ms, sent ${chunkCount} chunks`);
     } catch (err) {
-      console.error('[Cartesia] Error:', err);
+      console.error('[TTS] Error:', err);
     }
+    
+    // Small delay to ensure audio buffers are processed
+    await new Promise(resolve => setTimeout(resolve, 50));
+  };
+
+  // Legacy TTS (kept for compatibility, not used in streaming mode)
+  const textToSpeech = async (text) => {
+    return textToSpeechStreaming(text);
   };
 
   ws.on('message', async (data, isBinary) => {

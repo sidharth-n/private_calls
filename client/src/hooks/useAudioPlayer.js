@@ -11,6 +11,7 @@ export function useAudioPlayer() {
     if (!audioContextRef.current) {
       audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)({
         sampleRate: 24000, // Cartesia outputs 24kHz
+        latencyHint: 'interactive', // ✅ OPTIMIZED: Low latency mode
       });
     }
     return audioContextRef.current;
@@ -19,6 +20,7 @@ export function useAudioPlayer() {
   const playAudioChunk = useCallback(async (base64Audio) => {
     try {
       const audioContext = initAudioContext();
+      const chunkReceiveTime = Date.now();
 
       // Decode base64 to ArrayBuffer
       const binaryString = atob(base64Audio);
@@ -39,6 +41,17 @@ export function useAudioPlayer() {
       
       const currentTime = audioContext.currentTime;
       const startTime = Math.max(currentTime, nextPlayTimeRef.current);
+      const gap = startTime - currentTime;
+      const duration = audioBuffer.duration;
+      
+      console.log(`[AudioPlayer] 🎵 Chunk #${sourcesRef.current.length + 1}:`, {
+        duration: `${(duration * 1000).toFixed(0)}ms`,
+        currentTime: currentTime.toFixed(2),
+        scheduleAt: startTime.toFixed(2),
+        gap: gap > 0 ? `${(gap * 1000).toFixed(0)}ms ahead` : 'playing now',
+        queuedSources: sourcesRef.current.length,
+        isPlaying: isPlayingRef.current
+      });
       
       source.start(startTime);
       nextPlayTimeRef.current = startTime + audioBuffer.duration;
@@ -47,23 +60,27 @@ export function useAudioPlayer() {
       isPlayingRef.current = true;
       
       source.onended = () => {
+        console.log(`[AudioPlayer] ✅ Chunk ended, ${sourcesRef.current.length - 1} remaining`);
         sourcesRef.current = sourcesRef.current.filter(s => s !== source);
         if (sourcesRef.current.length === 0) {
           isPlayingRef.current = false;
           nextPlayTimeRef.current = 0;
+          console.log('[AudioPlayer] 🏁 All chunks finished');
         }
       };
     } catch (err) {
-      console.error('[AudioPlayer] Error playing chunk:', err);
+      console.error('[AudioPlayer] ❌ Error playing chunk:', err);
     }
   }, [initAudioContext]);
 
   const enqueueAudio = useCallback((base64Audio) => {
+    console.log('[AudioPlayer] 📥 Received audio chunk, queue size:', audioQueueRef.current.length);
     // Play immediately - no queuing delay
     playAudioChunk(base64Audio);
   }, [playAudioChunk]);
 
   const stopPlayback = useCallback(() => {
+    console.log(`[AudioPlayer] 🛑 STOP called - killing ${sourcesRef.current.length} sources`);
     // Stop all playing sources immediately
     sourcesRef.current.forEach(source => {
       try {
@@ -76,7 +93,7 @@ export function useAudioPlayer() {
     audioQueueRef.current = [];
     isPlayingRef.current = false;
     nextPlayTimeRef.current = 0;
-    console.log('[AudioPlayer] Stopped all audio immediately');
+    console.log('[AudioPlayer] ✅ All audio stopped');
   }, []);
 
   return {

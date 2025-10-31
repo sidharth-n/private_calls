@@ -22,17 +22,19 @@ export function useAudioCapture(onAudioData) {
 
       streamRef.current = stream;
 
-      // Create audio context at 16kHz
+      // Create audio context at 16kHz with low latency
       const audioContext = new (window.AudioContext || window.webkitAudioContext)({
         sampleRate: 16000,
+        latencyHint: 'interactive', // ✅ OPTIMIZED: Low latency mode
       });
       audioContextRef.current = audioContext;
 
       const source = audioContext.createMediaStreamSource(stream);
       
       // Create ScriptProcessor for audio chunks (deprecated but widely supported)
-      // Buffer size: 4096 samples = ~256ms at 16kHz
-      const processor = audioContext.createScriptProcessor(4096, 1, 1);
+      // ✅ OPTIMIZED: Buffer size 2048 = ~128ms at 16kHz (was 4096 = ~256ms)
+      // Smaller buffer = more frequent sending = lower latency
+      const processor = audioContext.createScriptProcessor(2048, 1, 1);
       processorRef.current = processor;
 
       processor.onaudioprocess = (e) => {
