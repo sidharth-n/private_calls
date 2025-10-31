@@ -227,7 +227,7 @@ wss.on('connection', (ws) => {
           transcript: text,
           voice: {
             mode: 'id',
-            id: 'a0e99841-438c-4a64-b679-ae501e7d6091',
+            id: 'b56c6aac-f35f-46f7-9361-e8f078cec72e',
           },
           output_format: {
             container: 'raw',
