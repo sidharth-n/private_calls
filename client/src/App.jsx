@@ -49,9 +49,12 @@ export default function App() {
       setIsAISpeaking(true);
     },
     onInterrupt: () => {
+      console.log('[App] ⚡⚡⚡ INTERRUPT - Stopping playback and clearing queue');
+      const timestamp = Date.now();
       stopPlayback();
       setIsAISpeaking(false);
-      setStatus('Interrupted. Listening...');
+      setStatus('⚡ Interrupted - Listening...');
+      console.log(`[App] ✅ Interrupt handled in ${Date.now() - timestamp}ms`);
     },
   });
   

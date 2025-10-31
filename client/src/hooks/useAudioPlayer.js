@@ -60,12 +60,18 @@ export function useAudioPlayer() {
       isPlayingRef.current = true;
       
       source.onended = () => {
-        console.log(`[AudioPlayer] ✅ Chunk ended, ${sourcesRef.current.length - 1} remaining`);
-        sourcesRef.current = sourcesRef.current.filter(s => s !== source);
-        if (sourcesRef.current.length === 0) {
-          isPlayingRef.current = false;
-          nextPlayTimeRef.current = 0;
-          console.log('[AudioPlayer] 🏁 All chunks finished');
+        const remaining = sourcesRef.current.length - 1;
+        if (remaining >= 0) {
+          console.log(`[AudioPlayer] ✅ Chunk ended, ${remaining} remaining`);
+          sourcesRef.current = sourcesRef.current.filter(s => s !== source);
+          if (sourcesRef.current.length === 0) {
+            isPlayingRef.current = false;
+            const audioContext = audioContextRef.current;
+            if (audioContext) {
+              nextPlayTimeRef.current = audioContext.currentTime;
+            }
+            console.log('[AudioPlayer] 🏁 All chunks finished');
+          }
         }
       };
     } catch (err) {
@@ -80,20 +86,36 @@ export function useAudioPlayer() {
   }, [playAudioChunk]);
 
   const stopPlayback = useCallback(() => {
-    console.log(`[AudioPlayer] 🛑 STOP called - killing ${sourcesRef.current.length} sources`);
-    // Stop all playing sources immediately
-    sourcesRef.current.forEach(source => {
+    const sourceCount = sourcesRef.current.length;
+    console.log(`[AudioPlayer] 🛑 STOP called - killing ${sourceCount} sources`);
+    
+    // Stop all playing sources immediately (including future-scheduled ones)
+    sourcesRef.current.forEach((source, idx) => {
       try {
-        source.stop();
+        source.stop(0); // Stop immediately at time 0
+        source.disconnect(); // Disconnect from audio graph
+        console.log(`[AudioPlayer] Killed source ${idx + 1}/${sourceCount}`);
       } catch (err) {
-        // Ignore if already stopped
+        // Ignore if already stopped/disconnected
       }
     });
+    
+    // Clear all state
     sourcesRef.current = [];
     audioQueueRef.current = [];
     isPlayingRef.current = false;
-    nextPlayTimeRef.current = 0;
-    console.log('[AudioPlayer] ✅ All audio stopped');
+    
+    // CRITICAL: Reset the play time to current time, not 0
+    // This prevents new chunks from being scheduled far in the future
+    const audioContext = audioContextRef.current;
+    if (audioContext) {
+      nextPlayTimeRef.current = audioContext.currentTime;
+      console.log(`[AudioPlayer] Reset nextPlayTime to ${audioContext.currentTime.toFixed(2)}`);
+    } else {
+      nextPlayTimeRef.current = 0;
+    }
+    
+    console.log('[AudioPlayer] ✅ All audio stopped and state reset');
   }, []);
 
   return {

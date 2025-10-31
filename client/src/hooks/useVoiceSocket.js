@@ -70,7 +70,7 @@ export function useVoiceSocket({ onStatusChange, onTranscript, onAudioChunk, onI
             onAudioChunkRef.current?.(msg.data);
             break;
           case 'interrupt':
-            console.log('[VoiceSocket] Interrupt received');
+            console.log('[VoiceSocket] ⚡⚡⚡ INTERRUPT RECEIVED - Stopping all audio immediately');
             onInterruptRef.current?.();
             break;
           case 'error':

@@ -208,16 +208,17 @@ wss.on('connection', (ws) => {
         try {
           console.log('[Gladia] Message event:', message?.type, JSON.stringify(message).substring(0, 200));
           
+          // ⚡ ULTRA-FAST INTERRUPTION: VAD-based instant detection
+          if (message?.type === 'speech_start' && state.isAISpeaking) {
+            console.log('[Gladia] ⚡⚡⚡ INSTANT INTERRUPT - VAD detected speech start');
+            state.isAISpeaking = false;
+            ws.send(JSON.stringify({ type: 'interrupt', message: 'User interrupted' }));
+            return;
+          }
+          
           if (message?.type === 'transcript') {
             const isFinal = message?.data?.is_final;
             const text = message?.data?.utterance?.text || '';
-            
-            // Interruption detection: only if user speaks while AI is speaking AND we have substantial text
-            if (!isFinal && text.length > 10 && state.isAISpeaking) {
-              console.log('[Gladia] 🛑 User interrupted AI with partial:', text);
-              state.isAISpeaking = false;
-              ws.send(JSON.stringify({ type: 'interrupt', message: 'User interrupted' }));
-            }
             
             if (isFinal && text.length > 0) {
               console.log('[Gladia] ✅ Final transcript:', text);
