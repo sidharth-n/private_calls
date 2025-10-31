@@ -4,7 +4,8 @@ export function useAudioPlayer() {
   const audioContextRef = useRef(null);
   const audioQueueRef = useRef([]);
   const isPlayingRef = useRef(false);
-  const currentSourceRef = useRef(null);
+  const nextPlayTimeRef = useRef(0);
+  const sourcesRef = useRef([]);
 
   const initAudioContext = useCallback(() => {
     if (!audioContextRef.current) {
@@ -31,52 +32,51 @@ export function useAudioPlayer() {
       const audioBuffer = audioContext.createBuffer(1, float32Array.length, 24000);
       audioBuffer.getChannelData(0).set(float32Array);
 
-      // Create and play source
+      // Schedule playback immediately or at next available time
       const source = audioContext.createBufferSource();
       source.buffer = audioBuffer;
       source.connect(audioContext.destination);
       
-      currentSourceRef.current = source;
+      const currentTime = audioContext.currentTime;
+      const startTime = Math.max(currentTime, nextPlayTimeRef.current);
+      
+      source.start(startTime);
+      nextPlayTimeRef.current = startTime + audioBuffer.duration;
+      
+      sourcesRef.current.push(source);
+      isPlayingRef.current = true;
       
       source.onended = () => {
-        currentSourceRef.current = null;
-        isPlayingRef.current = false;
-        // Play next chunk in queue
-        if (audioQueueRef.current.length > 0) {
-          const nextChunk = audioQueueRef.current.shift();
-          playAudioChunk(nextChunk);
+        sourcesRef.current = sourcesRef.current.filter(s => s !== source);
+        if (sourcesRef.current.length === 0) {
+          isPlayingRef.current = false;
+          nextPlayTimeRef.current = 0;
         }
       };
-
-      source.start(0);
-      isPlayingRef.current = true;
-      console.log('[AudioPlayer] Playing chunk');
     } catch (err) {
       console.error('[AudioPlayer] Error playing chunk:', err);
-      isPlayingRef.current = false;
     }
   }, [initAudioContext]);
 
   const enqueueAudio = useCallback((base64Audio) => {
-    if (isPlayingRef.current) {
-      audioQueueRef.current.push(base64Audio);
-    } else {
-      playAudioChunk(base64Audio);
-    }
+    // Play immediately - no queuing delay
+    playAudioChunk(base64Audio);
   }, [playAudioChunk]);
 
   const stopPlayback = useCallback(() => {
-    if (currentSourceRef.current) {
+    // Stop all playing sources immediately
+    sourcesRef.current.forEach(source => {
       try {
-        currentSourceRef.current.stop();
-        currentSourceRef.current = null;
+        source.stop();
       } catch (err) {
-        console.error('[AudioPlayer] Error stopping:', err);
+        // Ignore if already stopped
       }
-    }
+    });
+    sourcesRef.current = [];
     audioQueueRef.current = [];
     isPlayingRef.current = false;
-    console.log('[AudioPlayer] Stopped and cleared queue');
+    nextPlayTimeRef.current = 0;
+    console.log('[AudioPlayer] Stopped all audio immediately');
   }, []);
 
   return {

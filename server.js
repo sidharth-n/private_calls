@@ -65,6 +65,8 @@ wss.on('connection', (ws) => {
         sample_rate: 16000,
         bit_depth: 16,
         channels: 1,
+        endpointing: 0.3, // 300ms silence detection for fast response
+        maximum_duration_without_endpointing: 5, // Min 5 seconds required
         language_config: {
           languages: ['en'],
           code_switching: false,
@@ -105,6 +107,14 @@ wss.on('connection', (ws) => {
           if (message?.type === 'transcript') {
             const isFinal = message?.data?.is_final;
             const text = message?.data?.utterance?.text || '';
+            
+            // Interruption detection: if user speaks while AI is speaking
+            if (!isFinal && text.length > 0 && state.isAISpeaking) {
+              console.log('[Gladia] 🛑 User interrupted AI with partial:', text);
+              state.isAISpeaking = false;
+              ws.send(JSON.stringify({ type: 'interrupt', message: 'User interrupted' }));
+            }
+            
             if (isFinal && text.length > 0) {
               console.log('[Gladia] ✅ Final transcript:', text);
               ws.send(JSON.stringify({ type: 'user_transcript', text }));
@@ -184,9 +194,9 @@ wss.on('connection', (ws) => {
         body: JSON.stringify({
           model: 'llama-3.3-70b',
           messages: state.conversationHistory,
-          max_tokens: 150,
+          max_tokens: 80, // Shorter for faster response
           temperature: 0.8,
-          stream: false, // Non-streaming for simplicity in MVP
+          stream: false,
         }),
       });
 
@@ -213,11 +223,11 @@ wss.on('connection', (ws) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model_id: 'sonic-english',
+          model_id: 'sonic-3', // Faster model
           transcript: text,
           voice: {
             mode: 'id',
-            id: 'a0e99841-438c-4a64-b679-ae501e7d6091', // Friendly female voice
+            id: 'a0e99841-438c-4a64-b679-ae501e7d6091',
           },
           output_format: {
             container: 'raw',
@@ -236,6 +246,12 @@ wss.on('connection', (ws) => {
       let buffer = '';
 
       for await (const chunk of reader) {
+        // Check if interrupted
+        if (!state.isAISpeaking) {
+          console.log('[Cartesia] TTS interrupted, stopping');
+          break;
+        }
+        
         buffer += chunk.toString();
         const lines = buffer.split('\n');
         buffer = lines.pop() || '';
@@ -246,7 +262,7 @@ wss.on('connection', (ws) => {
             try {
               const data = JSON.parse(dataStr);
               if (data.type === 'chunk' && data.data) {
-                // Send audio chunk to browser
+                // Send audio chunk immediately
                 ws.send(JSON.stringify({
                   type: 'audio',
                   data: data.data,
