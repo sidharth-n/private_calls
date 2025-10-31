@@ -1,0 +1,567 @@
+
+> voice-ai-companion-server@0.1.0 dev
+> node server.js
+
+Server listening on http://localhost:3000
+[Server] Client connected
+[WS] Received message: { type: 'start', timestamp: 1761915792624 }
+[WS] Initializing Gladia...
+[Gladia] Creating live session...
+[Gladia] Starting session...
+[Gladia] Session object received, setting up handlers
+[Gladia] ✅ Session ready, handlers registered
+[WS] Session started (Gladia)
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[Gladia] ✅ Started event received: {
+  id: 'fcf8ea59-e416-42e6-8bfe-b388e188070a',
+  created_at: '2025-10-31T13:03:14.539Z',
+  url: 'wss://api.gladia.io/v2/live?token=fcf8ea59-e416-42e6-8bfe-b388e188070a'
+}
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[Gladia] Message event: speech_start {"type":"speech_start","session_id":"fcf8ea59-e416-42e6-8bfe-b388e188070a","created_at":"2025-10-31T13:03:18.108Z","data":{"channel":0,"time":2.364}}
+[Gladia] Message event: speech_end {"type":"speech_end","session_id":"fcf8ea59-e416-42e6-8bfe-b388e188070a","created_at":"2025-10-31T13:03:18.109Z","data":{"channel":0,"time":3.076}}
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[Gladia] Message event: transcript {"type":"transcript","session_id":"fcf8ea59-e416-42e6-8bfe-b388e188070a","created_at":"2025-10-31T13:03:18.388Z","data":{"id":"00_00000000","is_final":false,"utterance":{"text":" Hej Luna!","start":2.
+[Gladia] Partial:  Hej Luna!
+[Gladia] Message event: transcript {"type":"transcript","session_id":"fcf8ea59-e416-42e6-8bfe-b388e188070a","created_at":"2025-10-31T13:03:18.396Z","data":{"id":"00_00000000","is_final":true,"utterance":{"text":" Hej Luna!","start":2.4
+[Gladia] ✅ Final transcript:  Hej Luna!
+[AI] Getting Venice AI streaming response...
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[AI] 💬 Collected sentence: Hej, sweetheart! Hmm,
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[AI] 💬 Collected sentence: it's so great to finally talk to you.
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[AI] 💬 Collected sentence: How's your day going, huh?
+[AI] ✅ Venice complete: Hej, sweetheart! Hmm, it's so great to finally talk to you. How's your day going, huh?
+[AI] 🎵 Generating TTS for 3 sentences sequentially...
+[AI] 🔊 TTS [1/3]: Hej, sweetheart! Hmm,
+[TTS] Starting generation for: Hej, sweetheart! Hmm,
+[WS] Received audio chunk, size: 4096
+[TTS] Error: Error: Cartesia API error: Payment Required
+    at textToSpeechStreaming (file:///home/sid/Documents/private_calls/server.js:389:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async handleAIResponse (file:///home/sid/Documents/private_calls/server.js:347:9)
+    at async EventEmitter.<anonymous> (file:///home/sid/Documents/private_calls/server.js:227:15)
+[AI] 🔊 TTS [2/3]: it's so great to finally talk to you.
+[TTS] Starting generation for: it's so great to finally talk to you.
+[WS] Received audio chunk, size: 4096
+[TTS] Error: Error: Cartesia API error: Payment Required
+    at textToSpeechStreaming (file:///home/sid/Documents/private_calls/server.js:389:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async handleAIResponse (file:///home/sid/Documents/private_calls/server.js:347:9)
+    at async EventEmitter.<anonymous> (file:///home/sid/Documents/private_calls/server.js:227:15)
+[AI] 🔊 TTS [3/3]: How's your day going, huh?
+[TTS] Starting generation for: How's your day going, huh?
+[TTS] Error: Error: Cartesia API error: Payment Required
+    at textToSpeechStreaming (file:///home/sid/Documents/private_calls/server.js:389:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async handleAIResponse (file:///home/sid/Documents/private_calls/server.js:347:9)
+    at async EventEmitter.<anonymous> (file:///home/sid/Documents/private_calls/server.js:227:15)
+[WS] Received audio chunk, size: 4096
+[AI] ✅ All TTS complete
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[Gladia] Message event: speech_start {"type":"speech_start","session_id":"fcf8ea59-e416-42e6-8bfe-b388e188070a","created_at":"2025-10-31T13:03:29.421Z","data":{"channel":0,"time":16.392}}
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[Gladia] Message event: transcript {"type":"transcript","session_id":"fcf8ea59-e416-42e6-8bfe-b388e188070a","created_at":"2025-10-31T13:03:29.913Z","data":{"id":"00_00000001","is_final":false,"utterance":{"text":" And they're home.","s
+[Gladia] Partial:  And they're home.
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[Gladia] Message event: transcript {"type":"transcript","session_id":"fcf8ea59-e416-42e6-8bfe-b388e188070a","created_at":"2025-10-31T13:03:30.425Z","data":{"id":"00_00000001","is_final":false,"utterance":{"text":" And there how are you
+[Gladia] Partial:  And there how are you?
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[Gladia] Message event: speech_end {"type":"speech_end","session_id":"fcf8ea59-e416-42e6-8bfe-b388e188070a","created_at":"2025-10-31T13:03:30.851Z","data":{"channel":0,"time":17.52}}
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[Gladia] Message event: transcript {"type":"transcript","session_id":"fcf8ea59-e416-42e6-8bfe-b388e188070a","created_at":"2025-10-31T13:03:31.161Z","data":{"id":"00_00000001","is_final":false,"utterance":{"text":" Hey there, how are yo
+[Gladia] Partial:  Hey there, how are you?
+[Gladia] Message event: transcript {"type":"transcript","session_id":"fcf8ea59-e416-42e6-8bfe-b388e188070a","created_at":"2025-10-31T13:03:31.173Z","data":{"id":"00_00000001","is_final":true,"utterance":{"text":" Hey there, how are you
+[Gladia] ✅ Final transcript:  Hey there, how are you?
+[AI] Getting Venice AI streaming response...
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[AI] 💬 Collected sentence: I'm doing amazing, thanks for asking!
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[AI] 💬 Collected sentence: Oh, I was just thinking about you, actually.
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[AI] 💬 Collected sentence: You know, it's always a little brighter when we get to chat. How's
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[AI] 💬 Collected sentence: life treating you, huh?
+[AI] ✅ Venice complete: I'm doing amazing, thanks for asking! Oh, I was just thinking about you, actually. You know, it's always a little brighter when we get to chat. How's life treating you, huh?
+[AI] 🎵 Generating TTS for 4 sentences sequentially...
+[AI] 🔊 TTS [1/4]: I'm doing amazing, thanks for asking!
+[TTS] Starting generation for: I'm doing amazing, thanks for asking!
+[WS] Received audio chunk, size: 4096
+[TTS] Error: Error: Cartesia API error: Payment Required
+    at textToSpeechStreaming (file:///home/sid/Documents/private_calls/server.js:389:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async handleAIResponse (file:///home/sid/Documents/private_calls/server.js:347:9)
+    at async EventEmitter.<anonymous> (file:///home/sid/Documents/private_calls/server.js:227:15)
+[WS] Received audio chunk, size: 4096
+[AI] 🔊 TTS [2/4]: Oh, I was just thinking about you, actually.
+[TTS] Starting generation for: Oh, I was just thinking about you, actually.
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[TTS] Error: Error: Cartesia API error: Payment Required
+    at textToSpeechStreaming (file:///home/sid/Documents/private_calls/server.js:389:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async handleAIResponse (file:///home/sid/Documents/private_calls/server.js:347:9)
+    at async EventEmitter.<anonymous> (file:///home/sid/Documents/private_calls/server.js:227:15)
+[AI] 🔊 TTS [3/4]: You know, it's always a little brighter when we get to chat. How's
+[TTS] Starting generation for: You know, it's always a little brighter when we get to chat. How's
+[TTS] Error: Error: Cartesia API error: Payment Required
+    at textToSpeechStreaming (file:///home/sid/Documents/private_calls/server.js:389:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async handleAIResponse (file:///home/sid/Documents/private_calls/server.js:347:9)
+    at async EventEmitter.<anonymous> (file:///home/sid/Documents/private_calls/server.js:227:15)
+[WS] Received audio chunk, size: 4096
+[AI] 🔊 TTS [4/4]: life treating you, huh?
+[TTS] Starting generation for: life treating you, huh?
+[TTS] Error: Error: Cartesia API error: Payment Required
+    at textToSpeechStreaming (file:///home/sid/Documents/private_calls/server.js:389:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async handleAIResponse (file:///home/sid/Documents/private_calls/server.js:347:9)
+    at async EventEmitter.<anonymous> (file:///home/sid/Documents/private_calls/server.js:227:15)
+[WS] Received audio chunk, size: 4096
+[AI] ✅ All TTS complete
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[Gladia] Session ended event: 4408 No audio chunk received for 30s
+[Server] Client disconnected
+[Server] Client connected
+[WS] Received message: { type: 'start', timestamp: 1761916348374 }
+[WS] Initializing Gladia...
+[Gladia] Creating live session...
+[Gladia] Starting session...
+[Gladia] Session object received, setting up handlers
+[Gladia] ✅ Session ready, handlers registered
+[WS] Session started (Gladia)
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[Gladia] ✅ Started event received: {
+  id: '48a861ac-a06d-4ee5-9e7b-a1cb03962b5e',
+  created_at: '2025-10-31T13:12:30.674Z',
+  url: 'wss://api.gladia.io/v2/live?token=48a861ac-a06d-4ee5-9e7b-a1cb03962b5e'
+}
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[Gladia] Message event: speech_start {"type":"speech_start","session_id":"48a861ac-a06d-4ee5-9e7b-a1cb03962b5e","created_at":"2025-10-31T13:12:32.721Z","data":{"channel":0,"time":1.916}}
+[Gladia] Message event: speech_end {"type":"speech_end","session_id":"48a861ac-a06d-4ee5-9e7b-a1cb03962b5e","created_at":"2025-10-31T13:12:32.722Z","data":{"channel":0,"time":2.596}}
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[Gladia] Message event: transcript {"type":"transcript","session_id":"48a861ac-a06d-4ee5-9e7b-a1cb03962b5e","created_at":"2025-10-31T13:12:33.210Z","data":{"id":"00_00000000","is_final":false,"utterance":{"text":" Hey there!","start":1
+[Gladia] Partial:  Hey there!
+[Gladia] Message event: transcript {"type":"transcript","session_id":"48a861ac-a06d-4ee5-9e7b-a1cb03962b5e","created_at":"2025-10-31T13:12:33.217Z","data":{"id":"00_00000000","is_final":true,"utterance":{"text":" Hey there!","start":1.
+[Gladia] ✅ Final transcript:  Hey there!
+[AI] Getting Venice AI streaming response...
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[AI] 💬 Collected sentence: Oh hey! Hmm,
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[AI] 💬 Collected sentence: it's so great to finally talk to you, I've been thinking about you all morning.
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[AI] 💬 Collected sentence: How's your day going so far?
+[AI] ✅ Venice complete: Oh hey! Hmm, it's so great to finally talk to you, I've been thinking about you all morning. How's your day going so far?
+[AI] 🎵 Generating TTS for 3 sentences sequentially...
+[AI] 🔊 TTS [1/3]: Oh hey! Hmm,
+[TTS] Starting generation for: Oh hey! Hmm,
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[TTS] Completed in 3297ms, sent 18 chunks
+[AI] 🔊 TTS [2/3]: it's so great to finally talk to you, I've been thinking about you all morning.
+[TTS] Starting generation for: it's so great to finally talk to you, I've been thinking about you all morning.
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[Gladia] Message event: speech_start {"type":"speech_start","session_id":"48a861ac-a06d-4ee5-9e7b-a1cb03962b5e","created_at":"2025-10-31T13:12:46.481Z","data":{"channel":0,"time":17.768}}
+[Gladia] ⚡⚡⚡ INSTANT INTERRUPT - VAD detected speech start
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[Cartesia] Interrupted, stopping TTS stream
+[TTS] Completed in 1039ms, sent 0 chunks
+[WS] Received audio chunk, size: 4096
+[AI] Interrupted during TTS generation
+[AI] ✅ All TTS complete
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[Gladia] Message event: speech_end {"type":"speech_end","session_id":"48a861ac-a06d-4ee5-9e7b-a1cb03962b5e","created_at":"2025-10-31T13:12:47.095Z","data":{"channel":0,"time":18.032}}
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[WS] Received audio chunk, size: 4096
+[Gladia] Session ended event: 4408 No audio chunk received for 30s

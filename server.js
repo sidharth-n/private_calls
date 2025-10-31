@@ -169,8 +169,8 @@ wss.on('connection', (ws) => {
         sample_rate: 16000,
         bit_depth: 16,
         channels: 1,
-        endpointing: 0.15, // ✅ OPTIMIZED: 150ms aggressive endpointing (was 300ms)
-        maximum_duration_without_endpointing: 5,
+        endpointing: 0.05, // ✅ OPTIMIZED: 150ms aggressive endpointing (was 300ms)
+        maximum_duration_without_endpointing: 15,
         language_config: {
           languages: ['en'],
           code_switching: false,
@@ -283,11 +283,9 @@ wss.on('connection', (ws) => {
       }
 
       let fullResponse = '';
-      let sentenceBuffer = '';
       const reader = response.body;
-      const sentences = [];
       
-      // Collect all sentences from Venice stream
+      // Collect full response from Venice stream
       for await (const chunk of reader) {
         if (!state.isAISpeaking) {
           console.log('[AI] Interrupted, stopping Venice stream');
@@ -307,15 +305,6 @@ wss.on('connection', (ws) => {
               
               if (token) {
                 fullResponse += token;
-                sentenceBuffer += token;
-                
-                // Collect sentence when we hit punctuation
-                if (/[.!?]/.test(token) && sentenceBuffer.trim().length > 8) {
-                  const sentence = sentenceBuffer.trim();
-                  sentences.push(sentence);
-                  console.log('[AI] 💬 Collected sentence:', sentence);
-                  sentenceBuffer = '';
-                }
               }
             } catch (e) {
               // Skip invalid JSON
@@ -324,29 +313,17 @@ wss.on('connection', (ws) => {
         }
       }
       
-      // Add any remaining text
-      if (sentenceBuffer.trim().length > 0) {
-        sentences.push(sentenceBuffer.trim());
-      }
-      
-      // Send full transcript to frontend immediately
+      // Send full transcript to frontend
       if (fullResponse) {
         ws.send(JSON.stringify({ type: 'ai_transcript', text: fullResponse }));
         state.conversationHistory.push({ role: 'assistant', content: fullResponse });
         console.log('[AI] ✅ Venice complete:', fullResponse);
+        
+        // Generate TTS for the COMPLETE response as one piece
+        console.log('[AI] 🎵 Generating TTS for complete response...');
+        await textToSpeechStreaming(fullResponse.trim());
+        console.log('[AI] ✅ TTS complete');
       }
-      
-      // Generate TTS for each sentence SEQUENTIALLY to prevent audio overlap
-      console.log(`[AI] 🎵 Generating TTS for ${sentences.length} sentences sequentially...`);
-      for (let i = 0; i < sentences.length; i++) {
-        if (!state.isAISpeaking) {
-          console.log('[AI] Interrupted during TTS generation');
-          break;
-        }
-        console.log(`[AI] 🔊 TTS [${i+1}/${sentences.length}]:`, sentences[i]);
-        await textToSpeechStreaming(sentences[i]);
-      }
-      console.log('[AI] ✅ All TTS complete');
       
       state.isAISpeaking = false;
     } catch (err) {
@@ -414,6 +391,7 @@ wss.on('connection', (ws) => {
                   type: 'audio',
                   data: data.data,
                 }));
+                
               }
             } catch (e) {
               // Skip parse errors
@@ -428,8 +406,6 @@ wss.on('connection', (ws) => {
       console.error('[TTS] Error:', err);
     }
     
-    // Small delay to ensure audio buffers are processed
-    await new Promise(resolve => setTimeout(resolve, 50));
   };
 
   // Legacy TTS (kept for compatibility, not used in streaming mode)
