@@ -1,0 +1,21 @@
+{
+  "name": "voice-ai-companion-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "NODE_ENV=production node server.js",
+    "client": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "serve": "npm run build && node server.js"
+  },
+  "dependencies": {
+    "@gladiaio/sdk": "^0.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "node-fetch": "^3.3.2",
+    "ws": "^8.18.0"
+  }
+}
