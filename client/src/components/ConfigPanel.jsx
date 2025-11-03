@@ -32,70 +32,6 @@ const ConfigSection = ({ title, icon, children, defaultOpen = false }) => {
 export default function ConfigPanel({ config, updateConfig }) {
   return (
     <div className="bg-white h-full overflow-y-auto">
-      <ConfigSection title="LLM Settings" icon="🤖" defaultOpen={false}>
-        <div className="space-y-3">
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
-              Model
-            </label>
-            <select
-              value={config.llmSettings.model}
-              onChange={(e) => updateConfig('llmSettings', {
-                ...config.llmSettings,
-                model: e.target.value
-              })}
-              className="w-full p-1.5 text-xs border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="llama-3.3-70b">llama-3.3-70b</option>
-              <option value="llama-3.1-405b">llama-3.1-405b</option>
-              <option value="mistral-large">mistral-large</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
-              Max Tokens: {config.llmSettings.maxTokens}
-            </label>
-            <input
-              type="range"
-              min="20"
-              max="200"
-              step="10"
-              value={config.llmSettings.maxTokens}
-              onChange={(e) => updateConfig('llmSettings', {
-                ...config.llmSettings,
-                maxTokens: parseInt(e.target.value)
-              })}
-              className="w-full"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Response length (20-40 words recommended)
-            </p>
-          </div>
-
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
-              Temperature: {config.llmSettings.temperature}
-            </label>
-            <input
-              type="range"
-              min="0"
-              max="2"
-              step="0.1"
-              value={config.llmSettings.temperature}
-              onChange={(e) => updateConfig('llmSettings', {
-                ...config.llmSettings,
-                temperature: parseFloat(e.target.value)
-              })}
-              className="w-full"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Higher = more creative
-            </p>
-          </div>
-        </div>
-      </ConfigSection>
-
       <ConfigSection title="Functions" icon="⚡" defaultOpen={false}>
         <p className="text-xs text-gray-600 mb-2">
           Add custom functions for your agent to call during conversations
@@ -112,44 +48,6 @@ export default function ConfigPanel({ config, updateConfig }) {
         <button className="px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-xs">
           + Add Knowledge
         </button>
-      </ConfigSection>
-
-      <ConfigSection title="Speech Settings" icon="🎙️" defaultOpen={false}>
-        <div className="space-y-3">
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
-              Voice ID
-            </label>
-            <input
-              type="text"
-              value={config.speechSettings.voiceId}
-              onChange={(e) => updateConfig('speechSettings', {
-                ...config.speechSettings,
-                voiceId: e.target.value
-              })}
-              className="w-full p-1.5 text-xs border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono"
-              placeholder="Voice ID"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
-              Speed: {config.speechSettings.speed}x
-            </label>
-            <input
-              type="range"
-              min="0.5"
-              max="2"
-              step="0.1"
-              value={config.speechSettings.speed}
-              onChange={(e) => updateConfig('speechSettings', {
-                ...config.speechSettings,
-                speed: parseFloat(e.target.value)
-              })}
-              className="w-full"
-            />
-          </div>
-        </div>
       </ConfigSection>
 
       <ConfigSection title="Realtime Transcription" icon="⚡" defaultOpen={false}>

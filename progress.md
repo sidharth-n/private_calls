@@ -263,3 +263,24 @@ Store in `.env` file (see `.env.example`)
   - Live microphone test interface
 - **Design:** Clean, professional UI matching screenshot layout
 
+
+### ✅ Dashboard Config Integration with Backend (Nov 3, 2025)
+- **Backend Updated:** server.js now receives and uses dashboard config
+- **New Parameters Added to Dashboard:**
+  - LLM Settings section: model, maxTokens (20-200), temperature (0-2)
+  - All configs now sync with backend on test start
+- **Config Flow:**
+  - Dashboard sends complete config via WebSocket on 'start' message
+  - Backend uses config for: system prompt, LLM settings, speech settings, realtime settings
+  - All provider selections (LLM/Voice/Transcriber/Language) applied dynamically
+- **Welcome Message Implementation:**
+  - AI-speaks-first functionality added
+  - Welcome message sent immediately after session starts
+  - Generates TTS for welcome message before user speaks
+- **Parameters Now Configurable:**
+  - System Prompt (from dashboard)
+  - LLM: model, max_tokens, temperature
+  - TTS: voice ID, language
+  - STT: endpointing, max duration, language
+  - Welcome message
+
