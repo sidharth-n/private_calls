@@ -1,4 +1,5 @@
 import { useRef, useEffect, useCallback } from 'react';
+import { WS_URL } from '../config';
 
 export function useVoiceSocket({ onStatusChange, onTranscript, onAudioChunk, onInterrupt }) {
   const wsRef = useRef(null);
@@ -19,8 +20,8 @@ export function useVoiceSocket({ onStatusChange, onTranscript, onAudioChunk, onI
   });
 
   useEffect(() => {
-    console.log('[VoiceSocket] Creating WebSocket connection...');
-    const ws = new WebSocket('ws://localhost:3000/ws');
+    console.log('[VoiceSocket] Creating WebSocket connection to:', WS_URL);
+    const ws = new WebSocket(WS_URL);
     wsRef.current = ws;
 
     ws.onopen = () => {
