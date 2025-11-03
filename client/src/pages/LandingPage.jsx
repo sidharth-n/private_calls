@@ -115,32 +115,18 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* Trusted By Section */}
-      <div className="bg-white py-16 border-t border-gray-200">
+      {/* Powered By Venice Section */}
+      <div className="bg-white py-8  border-gray-200">
         <div className="max-w-7xl mx-auto px-6">
-          <p className="text-center text-sm text-gray-500 uppercase tracking-wider mb-8">
-            Trusted By
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center opacity-50">
-            {/* Placeholder for company logos */}
-            <div className="flex items-center justify-center">
-              <div className="text-gray-400 font-semibold text-lg">Company 1</div>
-            </div>
-            <div className="flex items-center justify-center">
-              <div className="text-gray-400 font-semibold text-lg">Company 2</div>
-            </div>
-            <div className="flex items-center justify-center">
-              <div className="text-gray-400 font-semibold text-lg">Company 3</div>
-            </div>
-            <div className="flex items-center justify-center">
-              <div className="text-gray-400 font-semibold text-lg">Company 4</div>
-            </div>
-            <div className="flex items-center justify-center">
-              <div className="text-gray-400 font-semibold text-lg">Company 5</div>
-            </div>
-            <div className="flex items-center justify-center">
-              <div className="text-gray-400 font-semibold text-lg">Company 6</div>
-            </div>
+          <div className="flex flex-col items-center gap-3">
+            <p className="text-center text-sm text-gray-500 uppercase tracking-wider z-10">
+              Powered by
+            </p>
+            <img 
+              src="/venice_logo.png" 
+              alt="Venice" 
+              className="h-32 mt-[-30px] z object-contain"
+            />
           </div>
         </div>
       </div>
