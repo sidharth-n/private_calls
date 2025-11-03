@@ -12,10 +12,10 @@ const wss = new WebSocketServer({ server, path: '/ws' });
 
 const PORT = process.env.PORT || 3000;
 
-// API Keys
-const GLADIA_API_KEY = 'bfa45b32-afd4-4a64-82b7-a1364fcf93b0';
-const VENICE_API_KEY = '5oQCso7onEWD38SlXmuVqYW14Qycw9qMnEOooL4c4W';
-const CARTESIA_API_KEY = 'sk_car_efnwWMeEECu2KAf6xiY2px';
+// API Keys - use environment variables in production
+const GLADIA_API_KEY = process.env.GLADIA_API_KEY || 'bfa45b32-afd4-4a64-82b7-a1364fcf93b0';
+const VENICE_API_KEY = process.env.VENICE_API_KEY || '5oQCso7onEWD38SlXmuVqYW14Qycw9qMnEOooL4c4W';
+const CARTESIA_API_KEY = process.env.CARTESIA_API_KEY || 'sk_car_efnwWMeEECu2KAf6xiY2px';
 
 // Default system prompt (will be overridden by dashboard config)
 const DEFAULT_SYSTEM_PROMPT = `You are Luna, an intimate and uncensored AI companion speaking in a VOICE CALL.
