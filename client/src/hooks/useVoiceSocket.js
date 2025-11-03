@@ -57,6 +57,11 @@ export function useVoiceSocket({ onStatusChange, onTranscript, onAudioChunk, onI
           case 'status':
             onStatusChangeRef.current?.(msg.message);
             break;
+          case 'partial_transcript':
+            console.log('[VoiceSocket] 📝 Partial transcript:', msg.text);
+            // Show partial transcript in status for real-time feedback
+            onStatusChangeRef.current?.(`Listening: "${msg.text}"`);
+            break;
           case 'user_transcript':
             console.log('[VoiceSocket] User transcript:', msg.text);
             onTranscriptRef.current?.({ role: 'user', text: msg.text });
